@@ -1,3 +1,4 @@
+import { User } from 'src/auth/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { BoardStatus } from './board-status.enum';
 import { Board1 } from './board.entity';
@@ -5,7 +6,10 @@ import { CreateBoardDto } from './dto/create-board.dto';
 
 @EntityRepository(Board1) //entity
 export class BoardRepository extends Repository<Board1> {
-  async createBoard(createBoardDto: CreateBoardDto): Promise<Board1> {
+  async createBoard(
+    createBoardDto: CreateBoardDto,
+    user: User,
+  ): Promise<Board1> {
     const { title, content } = createBoardDto;
     let dateOrigin = new Date();
     const date = dateOrigin.toLocaleString();
@@ -16,6 +20,7 @@ export class BoardRepository extends Repository<Board1> {
       content,
       date,
       status: BoardStatus.PUBLIC,
+      user,
     });
 
     await this.save(board);
