@@ -1,3 +1,4 @@
+import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { BoardService } from './board.service';
 import {
   Body,
@@ -9,10 +10,13 @@ import {
   Post,
   Req,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Board1 } from './board.entity';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { BoardStatus } from './board-status.enum';
 
 @Controller('board')
 @UseGuards(AuthGuard())
@@ -25,6 +29,7 @@ export class BoardController {
   }
 
   @Post('')
+  @UsePipes(ValidationPipe)
   createNewBoard(
     @Req() req,
     @Body() createBoardDto: CreateBoardDto,
@@ -39,9 +44,19 @@ export class BoardController {
 
   @Patch('/:id')
   updateBoard(
-    @Param('id') id: number,
+    @Param('id') boardId: number,
+    @Req() req,
     @Body() createBoardDto: CreateBoardDto,
   ): Promise<Board1> {
-    return this.boardService.updateBoard(id, createBoardDto);
+    return this.boardService.updateBoard(boardId, req.user, createBoardDto);
+  }
+
+  @Patch('/boardStatus/:id')
+  changeBoardStatus(
+    @Param('id') boardId: number,
+    @Req() req,
+    @Body('status', BoardStatusValidationPipe) status: BoardStatus,
+  ): Promise<Board1> {
+    return this.boardService.changeStatus(boardId, req.user, status);
   }
 }

@@ -6,4 +6,6 @@ export class CreateBoardDto {
 
   @IsNotEmpty()
   content: string;
+
+  writer: string;
 }

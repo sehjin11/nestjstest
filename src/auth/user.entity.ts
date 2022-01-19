@@ -12,14 +12,11 @@ import {
 @Unique(['username'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  userId: number;
 
   @Column()
   username: string;
 
   @Column()
   password: string;
-
-  @OneToMany((type) => Board1, (board1) => board1.user, { eager: true })
-  boards: Board1[];
 }
