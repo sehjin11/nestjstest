@@ -17,9 +17,12 @@ import { Board1 } from './board.entity';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { BoardStatus } from './board-status.enum';
+import { ApiBearerAuth, ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @Controller('board')
 @UseGuards(AuthGuard())
+@ApiBearerAuth('access-token')
+@ApiTags('게시글')
 export class BoardController {
   constructor(private boardService: BoardService) {}
 
